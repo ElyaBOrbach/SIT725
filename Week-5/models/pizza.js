@@ -1,6 +1,6 @@
 const { MongoClient, ServerApiVersion } = require("mongodb");
 
-const uri = "mongodb+srv://s222252774:ZXGVERupUKWQamZX@sit725.yzrfd.mongodb.net/?retryWrites=true&w=majority&appName=sit725";
+const uri = "mongodb+srv://dbuser:IpadTf8R4RXpS4YZ@sit725.yzrfd.mongodb.net/?retryWrites=true&w=majority&appName=sit725";
 
 async function getAllPizzas(callback) {
     const client = new MongoClient(uri);
