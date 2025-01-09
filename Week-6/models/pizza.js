@@ -1,47 +1,40 @@
-const { MongoClient, ServerApiVersion } = require("mongodb");
+let client = require('./connection');
 
-const uri = "mongodb+srv://dbuser:IpadTf8R4RXpS4YZ@sit725.yzrfd.mongodb.net/?retryWrites=true&w=majority&appName=sit725";
+function getCollection() {
+    return client.db('myDB').collection("pizzaMenu");
+}
 
 async function getAllPizzas(callback) {
-    const client = new MongoClient(uri);
- 
-    try {
-        await client.connect();
-        const db = client.db("myDB");
-        const collection = db.collection("pizzaMenu");
- 
-        const data = await collection.find({}).toArray();
- 
-        console.log(data);
-
-        callback(null, data);
-    } catch (err) {
-        console.error('Error fetching data:', err);
-        callback(err, null);
-    } finally {
-        await client.close();
-    }
+    const collection = getCollection();
+    const data = await collection.find({}).toArray();
+    callback(null, data);
 }
 
 async function getPizza(name, callback) {
-    const client = new MongoClient(uri);
- 
-    try {
-        await client.connect();
-        const db = client.db("myDB");
-        const collection = db.collection("pizzaMenu");
- 
-        const data = await collection.findOne({ name: name });
- 
-        console.log(data);
-
-        callback(null, data);
-    } catch (err) {
-        console.error('Error fetching data:', err);
-        callback(err, null);
-    } finally {
-        await client.close();
-    }
+    const collection = getCollection();
+    const data = await collection.findOne({ name: name });
+    callback(null, data);
 }
 
-module.exports = {getAllPizzas, getPizza}
+async function postPizza(pizza, callback) {
+    const collection = getCollection();
+    const result = await collection.insertOne(pizza);
+    callback(null, result);
+}
+
+async function patchPizzaPrice(name, price, callback) {
+    const collection = getCollection();
+    result = await collection.updateOne(
+        { name: name },
+        { $set: { 'price': price } }
+      );
+    callback(null, result);
+}
+
+async function deletePizza(name, callback){
+    const collection = getCollection();
+    result = await collection.deleteOne({name: name});
+    callback(null, result);
+  }
+
+module.exports = { getAllPizzas, getPizza, postPizza, patchPizzaPrice, deletePizza};
